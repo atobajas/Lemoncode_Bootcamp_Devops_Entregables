@@ -15,3 +15,6 @@ kubectl expose deployment/todoapp --port 8080 --target-port=8080 --name todoapp-
 
 # Para desplegar el deploy y el servicio del fichero todoapp-deploy.yml
 kubectl create -f ./todoapp-deploy.yml
+
+# Para eliminar el deploy y el servicio del fichero todoapp-deploy.yml
+kubectl delete -f ./todoapp-deploy.yml
