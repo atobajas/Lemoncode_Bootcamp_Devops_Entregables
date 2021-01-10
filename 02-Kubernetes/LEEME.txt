@@ -1,0 +1,5 @@
+Cada ejercicio se encuentra desarrollado dentro de su carpeta en el directorio laboratorio.
+
+Los enunciados de los ejercicios se encuentran en:
+El README-md o en el siguiente link al repositorio de Lemoncode:
+https://github.com/Lemoncode/bootcamp-devops-lemoncode/tree/master/02-orquestacion/exercises

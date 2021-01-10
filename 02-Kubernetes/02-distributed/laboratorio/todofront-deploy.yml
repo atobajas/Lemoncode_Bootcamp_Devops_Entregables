@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-front-distributed
+  name: todo-front-distributed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-front-distributed
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-front-distributed
+    spec:
+      containers:
+      - image: atobajas/todo-front
+        name: todo-front
+        # Es información para el sistema.
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-front-distributed-svc
+  labels:
+    app: todo-front-distributed-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: todo-front-distributed
+  type: ClusterIP

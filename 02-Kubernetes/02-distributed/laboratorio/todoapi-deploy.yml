@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-api-distributed
+  name: todo-api-distributed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-api-distributed
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-api-distributed
+    spec:
+      containers:
+      - image: atobajas/todo-api
+        name: todo-api
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        # Es información para el sistema.
+        ports:
+        - containerPort: 3000
+        # Prueba de vida para el contenedor de este pod
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-api-distributed-svc
+  labels:
+    app: todo-api-distributed-svc
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: todo-api-distributed
+  type: ClusterIP

@@ -18,7 +18,7 @@ Paste the code `todo-app/todos_db.sql` and the database must be started with som
 
 ### Environment Variables
 
-Create `todo-app/.env` with the previous database configuration thes values must be
+Create `todo-app/.env` with the previous database configuration this values must be
 
 ```ini
 NODE_ENV=develop
@@ -33,4 +33,4 @@ DB_VERSION=10.4
 
 ### Running Applications
 
-First we need to install dependencies change directory to `todo-app/frontend` and run `npm install`, then change directory to `/todo-app` and run `npm install`. Once that all dependencies are installed, we can run the solution locally by changing directory to `todo-app/frontend` and running `npm run run-p -l start:server start:dev`.
+First we need to install dependencies change directory to `todo-app/frontend` and run `npm install`, then change directory to `/todo-app` and run `npm install`. Once that all dependencies are installed, we can run the solution locally by changing directory to `todo-app/frontend` and running `npm run start:dev:server`.

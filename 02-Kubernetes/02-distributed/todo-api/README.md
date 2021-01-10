@@ -10,7 +10,7 @@ PORT=
 ## Running the Application with Docker on Local
 
 ```bash
-$ docker build -t lemoncode/todo-api . 
+$ docker build -t atobajas/todo-api . 
 ```
 
 Start app without database
@@ -19,5 +19,5 @@ Start app without database
 $ docker run -d -p 3000:3000 \
   -e NODE_ENV=production \
   -e PORT=3000 \
-  lemoncode/todo-api
+  atobajas/todo-api
 ```
