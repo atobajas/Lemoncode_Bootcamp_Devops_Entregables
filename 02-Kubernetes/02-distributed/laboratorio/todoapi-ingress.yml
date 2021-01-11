@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  labels:
+    app: api
+spec:
+  rules:
+  - host: lc-todo.edu
+    http:
+      paths:
+      - backend:
+          serviceName: todo-api-distributed-svc
+          servicePort: 3000
+        path: /api

@@ -1,0 +1,72 @@
+apiVersion: v1
+data:
+  TIPO: production
+  PUERTO: "3000"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: apiconfig
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-api-distributed
+  name: todo-api-distributed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-api-distributed
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-api-distributed
+    spec:
+      containers:
+      - image: atobajas/todo-api
+        name: todo-api
+        # variables de entorno usando ConfigMap con env
+        env:
+        - name: NODE_ENV
+          valueFrom: 
+            configMapKeyRef: 
+              # Nombre del configmap
+              name: apiconfig
+              # Nombre de la clave que contiene el valor
+              key: TIPO
+        - name: PORT
+          valueFrom: 
+            configMapKeyRef: 
+              name: apiconfig
+              key: PUERTO
+        # Es información para el sistema.
+        ports:
+        - containerPort: 3000
+        # Prueba de vida para el contenedor de este pod
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-api-distributed-svc
+  labels:
+    app: todo-api-distributed-svc
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: todo-api-distributed
+  type: ClusterIP
