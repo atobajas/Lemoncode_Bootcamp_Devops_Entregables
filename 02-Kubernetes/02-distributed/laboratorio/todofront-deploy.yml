@@ -18,7 +18,7 @@ spec:
         app: todo-front-distributed
     spec:
       containers:
-      - image: atobajas/todo-front
+      - image: atobajas/todo-front:v1
         name: todo-front
         # Es información para el sistema.
         ports:
