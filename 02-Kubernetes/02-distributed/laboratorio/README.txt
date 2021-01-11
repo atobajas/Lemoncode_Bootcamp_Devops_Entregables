@@ -83,3 +83,4 @@ kubectl delete -f ./todofront-deploy.yml
   kubectl create -f ./todoapi-ingress.yml
   kubectl create -f ./todofront-ingress.yml
   Desde nuestro odenador navegar a http://lc-todo.edu
+  Para probar en local tendremos que añadir una entrada DNS que resuelva http://lc-todo.edu a 127.0.0.1 (localhost)
