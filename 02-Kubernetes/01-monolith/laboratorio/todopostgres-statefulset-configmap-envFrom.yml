@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: todo-sql
+  name: todo-sql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-sql
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: todo-sql
+    spec:
+      containers:
+      - image: postgres:10.4
+        name: lc-todo-sql
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-sql-svc
+  labels:
+    app: todo-sql-svc
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: todo-sql
+  type: ClusterIP

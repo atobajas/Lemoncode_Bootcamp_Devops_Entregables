@@ -1,6 +1,6 @@
 # Pasos para ejecutar en local:
-1. ejecutar npm install en C:\bootcamp-devops-lemoncode\Github\02-orquestacion\exercises\00-monolith-in-mem\todo-app\
-2. ejecutar npm install en C:\bootcamp-devops-lemoncode\Github\02-orquestacion\exercises\00-monolith-in-mem\todo-app\frontend\
+1. ejecutar npm install en C:\bootcamp-devops-lemoncode\Github\02-orquestacion\exercises\01-monolith\todo-app\
+2. ejecutar npm install en C:\bootcamp-devops-lemoncode\Github\02-orquestacion\exercises\01-monolith\todo-app\frontend\
 con esto se generarán las dependencias.
 3. desde el último directorio ejecutar npm run start:dev:server
 4. desde un navegador acceder a http://localhost:8081 para probar la web.
@@ -8,7 +8,7 @@ con esto se generarán las dependencias.
 
 # Pasos dados con todoapp para crear y subir imagen Docker:
 1. Crear imagen utilizando el Dockerfile en C:\bootcamp-devops-lemoncode\Entregables\02-Kubernetes\00-monolith-in-mem\todo-app: 
-	docker build -t atobajas/lc-todo-monolith.
+	docker build -t atobajas/lc-todo-monolith .
 2. Subir imagen a mi registry Docker Hub:
 	# Es necesario subir la imagen al  registry para poder utilizar en Kubernetes.
 	docker push atobajas/lc-todo-monolith:latest
