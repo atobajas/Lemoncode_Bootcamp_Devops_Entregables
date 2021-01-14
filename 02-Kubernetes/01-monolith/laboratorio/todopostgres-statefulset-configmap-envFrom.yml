@@ -1,28 +1,3 @@
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  creationTimestamp: null
-  labels:
-    app: todo-sql
-  name: todo-sql
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: todo-sql
-  strategy: {}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: todo-sql
-    spec:
-      containers:
-      - image: postgres:10.4
-        name: lc-todo-sql
-        resources: {}
-status: {}
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,3 +12,34 @@ spec:
   selector:
     app: todo-sql
   type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: todo-sql
+  name: todo-sql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-sql
+  serviceName: "todo-sql-svc"
+  template:
+    metadata:
+      labels:
+        app: todo-sql
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:10.4
+        ports:
+        - containerPort: 5432
+          name: postgresdb
+        volumeMounts:
+        - name: pv-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pv-data
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim

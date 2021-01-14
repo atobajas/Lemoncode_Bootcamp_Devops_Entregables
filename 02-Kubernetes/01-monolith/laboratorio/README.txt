@@ -30,7 +30,7 @@ con esto se generarán las dependencias.
 ## Pasos dados con todoapp para crear y subir imagen Docker:
 0. crear red para que se vean los contenedores.
   docker create network lemoncode
-1. crear contenedor con el contenedor de Postgres:
+1. crear contenedor para Postgres:
   docker run -d --network lemoncode -p 5432:5432 -v todos:/var/lib/postgresql/data --name postgres postgres:10.4
   si la bd está sin inicializar:
     cd C:\bootcamp-devops-lemoncode\Github\02-orquestacion\exercises\01-monolith\todo-app\
@@ -60,19 +60,6 @@ con esto se generarán las dependencias.
 
 
 ## Kubernetes
-# Con este comando se ve el yaml para el deploy.
-kubectl create deploy todoapp --image=atobajas/lc-todo-monolith --dry-run=client -o yaml
-
-# Con este comando se ve el yaml del servicio.
-kubectl expose deployment/todoapp --port 8080 --target-port=8080 --name todoapp-svc --type LoadBalancer --dry-run=client -o yaml
-
-# Para desplegar el deploy y el servicio del fichero todoapp-deploy.yml
-kubectl create -f ./todoapp-deploy.yml
-
-# Para eliminar el deploy y el servicio del fichero todoapp-deploy.yml
-kubectl delete -f ./todoapp-deploy.yml
-
-## Kubernetes
 # Preparativos de creación de imagen y subida al registry.
 1. Crear imagen utilizando el Dockerfile en C:\bootcamp-devops-lemoncode\Entregables\02-Kubernetes\01-monolith\todo-app: 
 	docker build -t atobajas/lc-todo-monolith:sql .
@@ -80,13 +67,28 @@ kubectl delete -f ./todoapp-deploy.yml
 	# Es necesario subir la imagen al registry para poder utilizar en Kubernetes.
 	docker push atobajas/lc-todo-monolith:sql
 
-# Para hacer pruebas desde nuestro ordenador sin el servicio Ingress.
- kubectl port-forward service/todo-front-distributed-svc 8080:80
-   y desde un navegador web acceder a http://localhost:8080
-
 # Para crear de forma imperativa un configmap que tenga una colección con nuestras variables de entorno:
- kubectl create cm apiconfig --from-literal NODE_ENV=production --from-literal PORT=3000
+ kubectl create cm apiconfig --from-literal NODE_ENV=production --from-literal PORT=3000 ... etc.
 
-# Para desplegar los deploys con configmap (2 opciones) y el service desde fichero.
-  kubectl create -f ./todoapi-deploy-configmap-env.yml
-  kubectl create -f ./todoapi-deploy-configmap-envFrom.yml
+# Situarnos en C:\bootcamp-devops-lemoncode\Entregables\02-Kubernetes\01-monolith\todo-app\laboratorio
+
+#Crear persistencia de datos.
+1. Storageclass
+  kubectl apply -f todoappsql-storageclass.yml
+2. Persistentvolumen
+  kubectl apply -f todoappsql-persistentvolume.yml
+3. Claim para Postgres del anterior persistentvolumen
+  kubectl apply -f todoappsql-persistentvolumeclaim.yml
+
+# POSTGRES (con estado)
+  kubectl apply -f todopostgres-statefulset-configmap-envFrom.yml
+
+# FRONT/BACKEND
+# Desplegar el configmap.
+  kubectl apply -f todoappsql-configmap.yml
+
+# Desplegar deploy web (front/back) usando configmap y el service desde fichero.
+  kubectl apply -f todoappsql-deploy.yml
+
+Para hacer pruebas desde un navegador del pc: 
+  http://localhost:3000/

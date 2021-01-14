@@ -79,6 +79,9 @@ kubectl delete -f ./todofront-deploy.yml
      (si se utiliza Minikube ver: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/)
   kubectl get svc -n ingress-nginx (para ver la ip externa del controlador Ingress)
 
+# Deinstalar controlador Ingress NGINX en Docker Desktop.
+  kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.43.0/deploy/static/provider/cloud/deploy.yaml
+
 # Para desplegar los Ingress. (no existe comando kubectl imperativo)
   kubectl create -f ./todoapi-ingress.yml
   kubectl create -f ./todofront-ingress.yml

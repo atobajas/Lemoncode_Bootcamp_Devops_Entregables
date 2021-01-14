@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: todoapp
   name: todoapp
@@ -13,12 +12,11 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: todoapp
     spec:
       containers:
-      - image: lc-todo-monolith:sql
+      - image: atobajas/lc-todo-monolith:sql
         name: lc-todo-sql
         # variables de entorno usando ConfigMap con envFrom
         envFrom:
@@ -26,12 +24,12 @@ spec:
               name: envconfig
         # Es información para el sistema.
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
         # Prueba de vida para el contenedor de este pod
         livenessProbe:
           httpGet:
             path: /live
-            port: 8080
+            port: 3000
           initialDelaySeconds: 3
           periodSeconds: 5
         resources: {}
@@ -40,15 +38,14 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   labels:
     app: todoapp
   name: todoapp-svc
 spec:
   ports:
-  - port: 8080
+  - port: 3000
     protocol: TCP
-    targetPort: 8080
+    targetPort: 3000
   selector:
     app: todoapp
   type: LoadBalancer
