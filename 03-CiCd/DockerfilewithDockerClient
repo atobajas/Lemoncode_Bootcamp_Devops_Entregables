@@ -30,5 +30,4 @@ ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
 # install Docker client
-RUN apt add --update docker openrc
-RUN rc-update add docker boot
+RUN curl -sSL https://get.docker.com/ | sh
