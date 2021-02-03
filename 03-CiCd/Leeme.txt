@@ -1,8 +1,14 @@
+# 1 - Primero tenemos que crear una imagen dependiendo de si necesitamos Docker in Docker o no en Jenkins.
 # Build imagen
 docker build -t jenkins-gradle .
+# Esta imagen añade el cliente de Docker
+docker build -t jenkins-docker-gradle -f DockerfilewithDockerClient .
 
-# Ejecutar imagen
+# 2 - Con la anterior imagen crearemos un contenedor para ejecutar Jenkins.
+# Crear contenedor/es de Jenkins (http://localhost:8080)
+# 2.1 - Este contenedor se creará si no queremos utilizar Docker en la pipeline de Jenkins
 docker run -d --name jenkins-gradle -p 8080:8080 jenkins-gradle
 
-# Ejecutar imagen con Docker in Docker
-./start_jenkins.sh jenkins-gradle jenkins jenkins-docker-certs-gradle jenkins-data-gradle
+# 2.2 - Este contenedor se creará si queremos utilizar Docker en la pipeline de Jenkins
+# Se crean dos contenedores. Uno de Jenkins y otro con la imagen docker:dind (Docker in Docker)
+./start_jenkins.sh jenkins-docker-gradle jenkins jenkins-docker-certs-gradle jenkins-data-gradle
