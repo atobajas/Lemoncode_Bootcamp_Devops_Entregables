@@ -1,0 +1,8 @@
+# Build imagen
+docker build -t jenkins-gradle .
+
+# Ejecutar imagen
+docker run -d --name jenkins-gradle -p 8080:8080 jenkins-gradle
+
+# Ejecutar imagen con Docker in Docker
+./start_jenkins.sh jenkins-gradle jenkins jenkins-docker-certs-gradle jenkins-data-gradle
