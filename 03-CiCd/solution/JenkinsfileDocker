@@ -2,7 +2,7 @@ pipeline {
     agent {
         dockerfile {
             dir '03-CiCd'
-            filename 'DockerfilewithDockerClient'
+            filename 'Dockerfile'
         }
     }
     
