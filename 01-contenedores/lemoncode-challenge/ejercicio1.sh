@@ -48,8 +48,7 @@ docker run --name mybackend -d `
   -p 5000:80 `
   --network lemoncode-challenge `
   backend
-___________________________________________________________________________________
-
+  
 # 4. Creamos imagen Node.js para Frontend React
 # Fichero Dockerfile
 # en este caso la variable de entorno la meto en la imagen y NO tendremos que dársela en cada
