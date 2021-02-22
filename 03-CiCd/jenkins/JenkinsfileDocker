@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        dockerfile {
+            dir '03-CiCd'
+            filename 'Dockerfile'
+        }
+    }
+    
+    stages {
+        stage('Checkout external proj') {
+            steps {
+                git branch: 'master',
+                    url: 'https://github.com/atobajas/javagradlewcalculator.git'
+
+                sh "ls -lat"
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                echo "Compile solution java: calculator"
+                sh '''
+                    chmod +x gradlew
+                    ./gradlew
+                '''
+            }
+        }
+
+        stage('Unit tests') {
+            steps {
+                echo "Test solution: calculator"
+                sh './gradlew test'
+            }
+        }
+    }
+}

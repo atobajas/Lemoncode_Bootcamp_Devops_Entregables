@@ -1,0 +1,39 @@
+stages:
+  - clone
+
+variables:
+  target_docker_imagen: ubuntu:20.04
+
+clone-project:
+  image: $target_docker_imagen
+  stage: clone
+  before_script:
+    - apt-get update -y
+    # Install ssh-agent if not already installed, it is required by Docker.
+    # (change apt-get to yum if you use an RPM-based image)
+    # - 'which ssh-agent || ( apt-get install openssh-client -qq > /dev/null )'
+
+    # Git install unattended
+    - apt-get install git -qq > /dev/null
+    # Git and SSH setup to clone private repos
+    # Needs the deploykey file to be installed in all dependent repositories
+    #- git config --global url."git@gitlab.local:".insteadOf "http://gitlab.local/"
+    # Add gitlab to known_hosts
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H gitlab >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    # Start the ssh agent and add the deploykey
+    - chmod 400 key_ed25519
+    - eval $(ssh-agent -s)
+    #- ssh-add key_ed25519
+    - cp -p ./key_ed25519 ~/.ssh/id_ed25519
+    #
+    # Optionally, if you will be using any Git commands, set the user name and
+    # email.
+    - git config --global user.email "atobajas@gmail.com"
+    - git config --global user.name "Antonio Tobajas"
+
+  script:
+    # git clone ssh://git@gitlab.local:2222/bootcamp/springapp.git (funciona desde cmd)
+    - git clone ssh://git@gitlab/bootcamp/springapp.git
+    - ls -ali *

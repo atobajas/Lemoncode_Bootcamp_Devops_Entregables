@@ -1,0 +1,43 @@
+stages:
+  - maven:build
+  - maven:test
+  - docker:build
+  - deploy
+
+variables:
+  target_docker_imagen: maven:3.6.3-jdk-8-openj9
+
+maven-build:
+  image: $target_docker_imagen
+  stage: maven:build
+  script: "mvn clean package"
+  artifacts:
+    paths:
+      - target/*.jar
+    when: on_success
+
+maven-test:
+  image: $target_docker_imagen
+  stage: maven:test
+  script: "mvn verify"
+  only:
+    - develop
+
+docker-build:
+  stage: docker:build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+  script:
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHA
+  dependencies:
+    - maven-build
+
+docker-deploy:
+  stage: deploy
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY/$CI_PROJECT_PATH
+  script:
+    - docker run --name "springapp" --rm -d -p 8080:8080 $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHA
+  dependencies:
+    - docker-build
