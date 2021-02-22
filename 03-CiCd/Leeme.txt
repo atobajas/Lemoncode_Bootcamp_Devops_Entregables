@@ -1,14 +1,75 @@
+### EJERCICIO JENKINS ###
 # 1 - Primero tenemos que crear una imagen dependiendo de si necesitamos Docker in Docker o no en Jenkins.
 # Build imagen
+(Ejercicio 1. CI/CD de una Java + Gradle)
 docker build -t jenkins-gradle .
 # Esta imagen añade el cliente de Docker
+(Ejercicio 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runner)
 docker build -t jenkins-docker-gradle -f DockerfilewithDockerClient .
 
 # 2 - Con la anterior imagen crearemos un contenedor para ejecutar Jenkins.
 # Crear contenedor/es de Jenkins (http://localhost:8080)
 # 2.1 - Este contenedor se creará si no queremos utilizar Docker en la pipeline de Jenkins
+(Ejercicio 1. CI/CD de una Java + Gradle)
 docker run -d --name jenkins-gradle -p 8080:8080 jenkins-gradle
 
-# 2.2 - Este contenedor se creará si queremos utilizar Docker en la pipeline de Jenkins
+# 2.2 - Este contenedor se creará si queremos utilizar Docker en la pipeline de Jenkins.
+(Ejercicio 2. Modificar la pipeline para que utilice la imagen Docker de Gradle como build runner)
 # Se crean dos contenedores. Uno de Jenkins y otro con la imagen docker:dind (Docker in Docker)
 ./start_jenkins.sh jenkins-docker-gradle jenkins jenkins-docker-certs-gradle jenkins-data-gradle
+
+
+### EJERCICIO GITLAB ###
+1. CI/CD de una aplicación spring.
+En el directorio gitlab/1_springapp está la pipeline de gitlab que lo soluciona. (.gitlab-ci.yml).
+En el stage maven-build genero el artifact para que sea utilizado en el stage docker-build, 
+ya que el Dockerfile del contenedor tiene como ENTRYPOINT app.jar que se genera en este stage.
+
+Creo una variable global con el nombre de la imgen.
+
+El stage maven-test sólo se ejecutará si estamos en la rama develop.
+
+El stage docker-deploy depende de la finalización del stage docker-build.
+
+2. Crear un usuario nuevo y probar que no puede acceder al proyecto anteriormente creado.
+Creo un nuevo usuario test y le añado al projecto bootcamp/sprigapp con el rol de:
+	guest:  No se muestran opciones de Repository por lo que no podemos acceder a ficheros ni commits.
+		En las pipelenes se muestra la lista y sus stages pero no se puede hacer nada con ellas.
+		No se puede hacer Merge request.
+		No tenemos acceso a administrar el proyecto.
+		Podemos desde Members abandonar el proyecto.
+
+	reporter:  Se muestran opciones de Repository y podemos acceder a ficheros en modo lectura. Te permite hacer fork. 
+		Puede acceder a commits.
+		En las pipelenes se muestra la lista y sus stages y se pueden ver pero no ejecutarlas.
+		Se pueden ver pero no se puede hacer Merge request.
+		No tenemos acceso a administrar el proyecto.
+		Podemos desde Members abandonar el proyecto.
+
+	developer:  Se muestran opciones de Repository y podemos acceder a ficheros en modo lectura/escritura.
+			 Te permite hacer fork. 
+		Puede acceder a commits.
+		Permite crear y eliminar branches.
+		En las pipelenes/jobs se muestra la lista y sus stages y se pueden ver y ejecutar.
+		Se pueden ver y crear Merge request.
+		No tenemos acceso a administrar el proyecto.
+		Podemos desde Members abandonar el proyecto.
+
+	manteiner:  Se muestran opciones de Repository y podemos acceder a ficheros en modo lectura/escritura.
+			 Te permite hacer fork. 
+		Puede acceder a commits.
+		Permite crear y eliminar branches.
+		En las pipelenes/jobs se muestra la lista y sus stages y se pueden ver y ejecutar.
+		Se pueden ver y crear Merge request.
+		Tenemos acceso a administrar el proyecto pero no podemos transferirlo, archivarlo ni eliminarlo.
+		Podemos desde Members abandonar el proyecto y podemos invitar a otros miembros.
+		Podemos activar/desactivar deploy keys.
+
+3. Crear un nuevo repositorio que contenga una pipeline que clone otro proyecto (springapp anteriormente creado). 
+En el directorio gitlab/3_nuevo_repositorio existen dos subdirectorios:
+  1. en deploykeys está la pipeline de gitlab con el método deploy keys que lo soluciona. (.gitlab-ci.yml).
+  	están las claves pública y privada por si se quiere hacer pruebas en local.
+  2. cijobpermissions está la pipeline de gitlab con el método de CI job permissions model . (.gitlab-ci.yml).
+	el usuario que se utilice debe estar como miembro, al menos con rol reporter, en el repositorio a clonar.
+  NOTA: el repositorio que estamos clonando es el del apartado 1 de este ejercicio.
+  	

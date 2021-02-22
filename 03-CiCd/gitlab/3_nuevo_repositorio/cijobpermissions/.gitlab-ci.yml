@@ -1,0 +1,30 @@
+stages:
+  - clone
+
+clone-project:
+  image: ubuntu:20.04
+  stage: clone
+  before_script:
+    - apt-get update -y
+
+  # Git install unattended
+    - apt-get install git -qq > /dev/null
+
+  #
+  # Optionally, if you will be using any Git commands, set the user name and
+  # email.
+    - git config --global user.email "atobajas@gmail.com"
+    - git config --global user.name "Antonio Tobajas"
+
+  script:
+  # git clone ssh://git@gitlab.local:2222/bootcamp/springapp.git (Me funciona desde cmd)
+    #- echo -e "machine gitlab:8888\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}"
+    # Debemos añadir como miembro, al menos con rol reporter, el usuario al repositorio a clonar.
+    # 1 con variable de entorno CI_JOB_TOKEN
+    # Hay que añadir una variable password al proyecto con la contraseña del usuario en el que se esté ejecutando la pipeline.
+    # Desde el proyecto Settings / CI CD / Variables
+    - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab:8888/bootcamp/springapp.git
+    # 2 con usuario y contraseña. (contraseña en variable de proyecto)
+    #- git clone http://atobajas:${password}@gitlab:8888/bootcamp/springapp.git
+    - ls -ali *
+    
