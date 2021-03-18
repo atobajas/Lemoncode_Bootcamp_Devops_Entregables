@@ -1,8 +1,7 @@
 pipeline {
     agent {
         dockerfile {
-            //dir '03-CiCd/jenkins'
-            sh 'cd 03-CiCd/jenkins'
+            dir '03-CiCd/jenkins'
             filename 'DockerfilewithDockerClient'
         }
     }
