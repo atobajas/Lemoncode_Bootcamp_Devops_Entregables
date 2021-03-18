@@ -1,9 +1,8 @@
 pipeline {
     agent {
-        dockerfile {
-            dir '03-CiCd/jenkins'
-            filename 'DockerfilewithDockerClient'
-        }
+	docker {
+	    image 'node:alpine3.12'
+	}
     }
     
     stages {
